@@ -1,0 +1,28 @@
+version: "3"
+services:
+  drupal:
+    build: .
+    container_name: drupal
+    volumes:
+      - ~/projects/drupal:/var/www/html
+    restart: always
+    tty: true
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    restart: always
+    tty: true
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: always
+    tty: true
+    volumes:
+      - ./conf/nginx:/etc/nginx/conf.d
+    links:
+      - mariadb
+      - drupal
+    ports:
+      - 8080:80
